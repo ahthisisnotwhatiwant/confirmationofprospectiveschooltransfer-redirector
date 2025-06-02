@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>전입학예정확인서</title>
   <script>
-    // 여기에 실제 샤드(배포된 Streamlit 앱) URL을 넣으세요.
+    // === 1) 샤드 리스트 (기존 코드) ===
     const shards = [
       "https://confirmationofprospectiveschooltransfer.streamlit.app",
       "https://confirmationofprospectiveschooltransfer2.streamlit.app",
@@ -20,23 +20,56 @@
       "https://confirmationofprospectiveschooltransfer10.streamlit.app"
     ];
 
-    function getNextShard() {
-      // 이전에 localStorage에 저장된 인덱스를 가져옵니다. (없으면 -1)
-      let lastIdx = parseInt(localStorage.getItem("lastShardIdx"));
-      if (isNaN(lastIdx)) {
-        lastIdx = -1;
+    // === 2) 지연시간 테스트 함수 (기존 코드) ===
+    async function testLatency(url) {
+      const start = performance.now();
+      try {
+        // 가벼운 요청으로 지연 시간 측정
+        await fetch(url + "/", { mode: "no-cors" });
+        return performance.now() - start;
+      } catch {
+        return Infinity;
       }
-      // 다음 인덱스를 계산 (0 → 1 → 2 → 0 → …)
-      const nextIdx = (lastIdx + 1) % shards.length;
-      // localStorage에 다시 저장
-      localStorage.setItem("lastShardIdx", nextIdx);
-      return shards[nextIdx];
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const targetUrl = getNextShard();
-      console.log("Round-Robin 선택 샤드:", targetUrl);
-      // 해당 샤드로 리디렉트
+    async function chooseBestShard() {
+      const results = await Promise.all(
+        shards.map(async (url) => {
+          const latency = await testLatency(url);
+          return { url, latency };
+        })
+      );
+      results.sort((a, b) => a.latency - b.latency);
+      return results[0].url;
+    }
+
+    // === 3) 이모티콘 순환용 배열 및 로직 추가 ===
+    // 바꿔 보여줄 이모티콘 목록 (원하는 이모지로 자유롭게 수정하세요)
+    const emojis = [
+      "🚀", "🔄", "⌛", "🌐", "📄", "⭐", "🔧", "💡", "📶", "⏳"
+    ];
+    let emojiIdx = 0;  // 현재 표시 중인 이모티콘 인덱스
+
+    // 이모티콘 순환 함수를 설정
+    function startEmojiRotation() {
+      const msgDiv = document.querySelector(".message");
+      // 맨 처음 로드 시에도 즉시 이모티콘 표시
+      msgDiv.textContent = emojis[emojiIdx];
+
+      // 500ms(0.5초)마다 다음 이모티콘으로 교체
+      setInterval(() => {
+        emojiIdx = (emojiIdx + 1) % emojis.length;
+        msgDiv.textContent = emojis[emojiIdx];
+      }, 500);
+    }
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      // 1) 먼저 이모티콘 순환 시작
+      startEmojiRotation();
+
+      // 2) 최적 샤드 선택 후 리디렉션
+      const targetUrl = await chooseBestShard();
+      console.log("지연시간 기반 선택 샤드:", targetUrl);
       window.location.replace(targetUrl);
     });
   </script>
@@ -53,15 +86,14 @@
       background-color: #f5f5f5;
     }
     .message {
-      font-size: 1.2rem;
+      font-size: 3rem; /* 이모티콘이 큼직하게 보이도록 크기 조정 */
       color: #333;
     }
   </style>
 </head>
 <body>
-  <div class="message">
-    잠시만 기다려 주세요…<br />
-    서버 연결 중입니다.
-  </div>
+  <!-- 원래는 "잠시만 기다려 주세요... 서버 연결 중입니다."였던 부분을
+       이모티콘을 보여주는 <div>로 대체했습니다. -->
+  <div class="message"></div>
 </body>
 </html>
