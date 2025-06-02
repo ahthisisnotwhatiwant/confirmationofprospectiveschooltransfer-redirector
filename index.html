@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>전학 확인 앱 접속</title>
+  <script>
+    // 샤드별 URL 리스트
+    const shards = [
+      "https://confirmationofprospectiveschooltransfer.streamlit.app",
+      "https://confirmationofprospectiveschooltransfer2.streamlit.app",
+      "https://confirmationofprospectiveschooltransfer3.streamlit.app"
+    ];
+    // 페이지 로드 후 사용자를 무작위 샤드로 Redirect
+    window.addEventListener("DOMContentLoaded", () => {
+      const idx = Math.floor(Math.random() * shards.length);
+      const target = shards[idx];
+      window.location.replace(target);
+    });
+  </script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .message {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="message">
+    잠시만 기다려 주세요…<br />
+    최적의 서버로 연결 중입니다.
+  </div>
+</body>
+</html>
