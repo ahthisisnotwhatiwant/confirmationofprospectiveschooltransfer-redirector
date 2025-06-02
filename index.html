@@ -4,32 +4,50 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>전학 확인 앱 접속</title>
+  <title>전입학예정확인서</title>
   <script>
-    // 샤드별 URL 리스트
+    // 여기에 실제 샤드(배포된 Streamlit 앱) URL을 넣으세요.
     const shards = [
       "https://confirmationofprospectiveschooltransfer.streamlit.app",
       "https://confirmationofprospectiveschooltransfer2.streamlit.app",
       "https://confirmationofprospectiveschooltransfer3.streamlit.app"
     ];
-    // 페이지 로드 후 사용자를 무작위 샤드로 Redirect
+
+    function getNextShard() {
+      // 이전에 localStorage에 저장된 인덱스를 가져옵니다. (없으면 -1)
+      let lastIdx = parseInt(localStorage.getItem("lastShardIdx"));
+      if (isNaN(lastIdx)) {
+        lastIdx = -1;
+      }
+      // 다음 인덱스를 계산 (0 → 1 → 2 → 0 → …)
+      const nextIdx = (lastIdx + 1) % shards.length;
+      // localStorage에 다시 저장
+      localStorage.setItem("lastShardIdx", nextIdx);
+      return shards[nextIdx];
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
-      const idx = Math.floor(Math.random() * shards.length);
-      const target = shards[idx];
-      window.location.replace(target);
+      const targetUrl = getNextShard();
+      console.log("Round-Robin 선택 샤드:", targetUrl);
+      // 해당 샤드로 리디렉트
+      window.location.replace(targetUrl);
     });
   </script>
   <style>
     body {
+      margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       font-family: Arial, sans-serif;
       text-align: center;
+      background-color: #f5f5f5;
     }
     .message {
       font-size: 1.2rem;
+      color: #333;
     }
   </style>
 </head>
