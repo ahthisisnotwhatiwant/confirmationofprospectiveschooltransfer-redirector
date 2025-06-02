@@ -20,40 +20,6 @@
       "https://confirmationofprospectiveschooltransfer10.streamlit.app"
     ];
 
-    // (2) 각 샤드 지연 시간 측정
-    async function testLatency(url) {
-      const start = performance.now();
-      try {
-        await fetch(url + "/", { mode: "no-cors" });
-        return performance.now() - start;
-      } catch {
-        return Infinity;
-      }
-    }
-
-    // (3) 병렬로 모두 측정 후 최저 지연 샤드를 선택
-    async function chooseBestShard() {
-      const results = await Promise.all(
-        shards.map(async (url) => {
-          const latency = await testLatency(url);
-          return { url, latency };
-        })
-      );
-      results.sort((a, b) => a.latency - b.latency);
-      return results[0].url;
-    }
-
-    window.addEventListener("DOMContentLoaded", async () => {
-      // (4) 이모티콘 순환 시작
-      startEmojiRotation();
-
-      // (5) 최적 샤드로 리디렉션
-      const targetUrl = await chooseBestShard();
-      console.log("선택된 최적 샤드:", targetUrl);
-      window.location.replace(targetUrl);
-    });
-
-    // ────────────────────────────────────────────────
     // (6) 이모티콘 순환 로직
     const emojis = ["🐀", "🐂", "🐅", "🐇", "🐉", "🐍", "🐎", "🐑", "🐒", "🐔", "🐕", "🐖"];
     let emojiIndex = 0;
@@ -67,7 +33,17 @@
         emojiDiv.textContent = emojis[emojiIndex];
       }, 600);
     }
-    // ────────────────────────────────────────────────
+
+    window.addEventListener("DOMContentLoaded", () => {
+      // (4) 이모티콘 순환 시작
+      startEmojiRotation();
+
+      // (5) 무작위로 샤드 선택 후 리디렉트
+      const randomIdx = Math.floor(Math.random() * shards.length);
+      const targetUrl = shards[randomIdx];
+      console.log("무작위 선택 샤드:", targetUrl);
+      window.location.replace(targetUrl);
+    });
   </script>
   <style>
     body {
