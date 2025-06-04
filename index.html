@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>전입학예정확인서</title>
+  <title>전입학예정확인서 조사</title>
   <script>
     // (1) 샤드 URL 목록
     const shards = [
@@ -27,11 +27,11 @@
       const emojiDiv = document.getElementById("emoji");
       // 즉시 첫 이모티콘 표시
       emojiDiv.textContent = emojis[emojiIndex];
-      // 0.6초(600ms)마다 이모티콘 변경
+      // 0.2초(600ms)마다 이모티콘 변경
       setInterval(() => {
         emojiIndex = (emojiIndex + 1) % emojis.length;
         emojiDiv.textContent = emojis[emojiIndex];
-      }, 600);
+      }, 200);
     }
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -80,7 +80,7 @@
     <!-- (7) 고정 문구 -->
     <div class="message-text">
       잠시만 기다려 주세요.<br />
-      서버 연결 중입니다.
+      접속 중입니다.
     </div>
     <!-- (8) 이모티콘만 순환해서 표시 -->
     <div id="emoji" class="emoji"></div>
