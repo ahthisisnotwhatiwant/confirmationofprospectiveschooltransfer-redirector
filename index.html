@@ -26,17 +26,17 @@
     ];
 
     // (6) 이모티콘 순환 로직
-    const emojis = ["⏳", "⌛"];
+    const emojis = ["🐭", "🐮", "🐯", "🐰", "🐲", "🐍", "🐴", "🐑", "🐵", "🐔", "🐶", "🐷"];
     let emojiIndex = 0;
     function startEmojiRotation() {
       const emojiDiv = document.getElementById("emoji");
       // 즉시 첫 이모티콘 표시
       emojiDiv.textContent = emojis[emojiIndex];
-      // 0.3초(300ms)마다 이모티콘 변경
+      // 0.2초(200ms)마다 이모티콘 변경
       setInterval(() => {
         emojiIndex = (emojiIndex + 1) % emojis.length;
         emojiDiv.textContent = emojis[emojiIndex];
-      }, 300);
+      }, 200);
     }
 
     window.addEventListener("DOMContentLoaded", () => {
