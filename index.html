@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>전입학예정확인서 조사</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600&family=Rubik:wght@400;600&display=swap" rel="stylesheet">
   <script>
     // 샤드 URL 목록
     const shards = [
@@ -27,11 +27,11 @@
     ];
 
     window.addEventListener("DOMContentLoaded", () => {
-      // 무작위로 샤드 선택 후 2초 지연 리디렉션
+      // 무작위로 샤드 선택 후 0.5초 지연 리디렉션
       const randomIdx = Math.floor(Math.random() * shards.length);
       const targetUrl = shards[randomIdx];
       console.log("무작위 선택 샤드:", targetUrl);
-      setTimeout(() => window.location.replace(targetUrl), 2000);
+      setTimeout(() => window.location.replace(targetUrl), 500);
     });
   </script>
   <style>
@@ -42,69 +42,124 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      font-family: 'Inter', 'Noto Sans KR', sans-serif;
+      font-family: 'Rubik', 'Noto Sans KR', sans-serif;
       text-align: center;
-      background: linear-gradient(135deg, #eceff1, #f7fafc);
-      color: #1a202c;
+      background: #ffffff;
+      color: #2d3748;
+      position: relative;
+      overflow: hidden;
+    }
+    .shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .shape {
+      position: absolute;
+      opacity: 0.7;
+      animation: float 10s ease-in-out infinite;
+    }
+    .shape.circle {
+      width: 80px;
+      height: 80px;
+      background: #e53e3e;
+      border-radius: 50%;
+      top: 10%;
+      left: 15%;
+    }
+    .shape.square {
+      width: 100px;
+      height: 100px;
+      background: #3182ce;
+      top: 60%;
+      left: 75%;
+      transform: rotate(45deg);
+    }
+    .shape.triangle {
+      width: 0;
+      height: 0;
+      border-left: 60px solid transparent;
+      border-right: 60px solid transparent;
+      border-bottom: 100px solid #d69e2e;
+      top: 70%;
+      left: 20%;
+    }
+    .shape.ellipse {
+      width: 120px;
+      height: 60px;
+      background: #feb2b2;
+      border-radius: 50%;
+      top: 20%;
+      left: 70%;
+      transform: rotate(-30deg);
     }
     .container {
       background: #ffffff;
-      padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
-      max-width: 420px;
+      padding: 2rem;
+      border: 1px solid #e2e8f0;
+      max-width: 360px;
       width: 90%;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      animation: fadeIn 0.8s ease-out;
+      position: relative;
+      z-index: 1;
     }
     .message-text {
-      font-size: 1.6rem;
+      font-size: 1.3rem;
       font-weight: 600;
-      color: #1a202c;
+      color: #2d3748;
       margin-bottom: 1.5rem;
       line-height: 1.4;
-      letter-spacing: -0.02em;
     }
     .spinner {
-      border: 8px solid #edf2f7;
-      border-top: 8px solid transparent;
-      border-image: linear-gradient(45deg, #4c51bf, #9f7aea) 1;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top: 4px solid #3182ce;
       border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spinAndScale 1.2s ease-in-out infinite;
+      animation: spin 1.5s linear infinite;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-    @keyframes spinAndScale {
-      0% { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(180deg) scale(1.1); }
-      100% { transform: rotate(360deg) scale(1); }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+      100% { transform: translateY(0) rotate(0deg); }
     }
     @media (max-width: 480px) {
       .container {
-        padding: 2rem;
+        padding: 1.5rem;
       }
       .message-text {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
       }
       .spinner {
-        width: 50px;
-        height: 50px;
+        width: 32px;
+        height: 32px;
+      }
+      .shape {
+        transform: scale(0.7);
       }
     }
   </style>
 </head>
 <body>
+  <div class="shapes">
+    <div class="shape circle"></div>
+    <div class="shape square"></div>
+    <div class="shape triangle"></div>
+    <div class="shape ellipse"></div>
+  </div>
   <div class="container">
     <div class="message-text">
-      접속 중입니다.<br />
       잠시만 기다려 주세요.
     </div>
     <div class="spinner"></div>
