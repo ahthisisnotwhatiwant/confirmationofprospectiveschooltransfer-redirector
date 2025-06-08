@@ -5,8 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>전입학예정확인서 조사</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script>
-    // (1) 샤드 URL 목록
+    // 샤드 URL 목록
     const shards = [
       "https://confirmationofprospectiveschooltransfer.streamlit.app",
       "https://confirmationofprospectiveschooltransfer2.streamlit.app",
@@ -25,29 +26,12 @@
       "https://confirmationofprospectiveschooltransfer15.streamlit.app"
     ];
 
-    // (6) 이모티콘 순환 로직
-    const emojis = ["🐭", "🐮", "🐯", "🐰", "🐲", "🐍", "🐴", "🐑", "🐵", "🐔", "🐶", "🐷"];
-    let emojiIndex = 0;
-    function startEmojiRotation() {
-      const emojiDiv = document.getElementById("emoji");
-      // 즉시 첫 이모티콘 표시
-      emojiDiv.textContent = emojis[emojiIndex];
-      // 0.15초(150ms)마다 이모티콘 변경
-      setInterval(() => {
-        emojiIndex = (emojiIndex + 1) % emojis.length;
-        emojiDiv.textContent = emojis[emojiIndex];
-      }, 150);
-    }
-
     window.addEventListener("DOMContentLoaded", () => {
-      // (4) 이모티콘 순환 시작
-      startEmojiRotation();
-
-      // (5) 무작위로 샤드 선택 후 리디렉트
+      // 무작위로 샤드 선택 후 2초 지연 리디렉션
       const randomIdx = Math.floor(Math.random() * shards.length);
       const targetUrl = shards[randomIdx];
       console.log("무작위 선택 샤드:", targetUrl);
-      window.location.replace(targetUrl);
+      setTimeout(() => window.location.replace(targetUrl), 2000);
     });
   </script>
   <style>
@@ -57,38 +41,73 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans KR', sans-serif;
       text-align: center;
-      background-color: #f5f5f5;
+      background: linear-gradient(135deg, #eceff1, #f7fafc);
+      color: #1a202c;
     }
     .container {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+      max-width: 420px;
+      width: 90%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.8s ease-out;
     }
     .message-text {
-      font-size: 1.2rem;
-      color: #333;
-      margin-bottom: 1rem;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1a202c;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+      letter-spacing: -0.02em;
     }
-    .emoji {
-      font-size: 2.5rem;
-      height: 3rem; /* 미리 공간 확보 */
-      line-height: 3rem;
+    .spinner {
+      border: 8px solid #edf2f7;
+      border-top: 8px solid transparent;
+      border-image: linear-gradient(45deg, #4c51bf, #9f7aea) 1;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spinAndScale 1.2s ease-in-out infinite;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spinAndScale {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+    @media (max-width: 480px) {
+      .container {
+        padding: 2rem;
+      }
+      .message-text {
+        font-size: 1.3rem;
+      }
+      .spinner {
+        width: 50px;
+        height: 50px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- (7) 고정 문구 -->
     <div class="message-text">
       접속 중입니다.<br />
       잠시만 기다려 주세요.
     </div>
-    <!-- (8) 이모티콘만 순환해서 표시 -->
-    <div id="emoji" class="emoji"></div>
+    <div class="spinner"></div>
   </div>
 </body>
 </html>
