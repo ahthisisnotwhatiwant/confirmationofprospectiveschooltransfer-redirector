@@ -25,144 +25,116 @@
       "https://confirmationofprospectiveschooltransfer14.streamlit.app",
       "https://confirmationofprospectiveschooltransfer15.streamlit.app"
     ];
-
     window.addEventListener("DOMContentLoaded", () => {
-      // 무작위로 샤드 선택 후 0.5초 지연 리디렉션
       const randomIdx = Math.floor(Math.random() * shards.length);
       const targetUrl = shards[randomIdx];
-      console.log("무작위 선택 샤드:", targetUrl);
       setTimeout(() => window.location.replace(targetUrl), 500);
     });
   </script>
   <style>
+    /* --- 기본 레이아웃 유지 --- */
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: center; align-items: center;
       min-height: 100vh;
       font-family: 'Rubik', 'Noto Sans KR', sans-serif;
-      text-align: center;
-      background: #ffffff;
-      color: #2d3748;
-      position: relative;
-      overflow: hidden;
+      background: #ffffff; color: #2d3748;
+      overflow: hidden; position: relative;
     }
-    .shapes {
+    .container {
+      background: #ffffff; padding: 2rem;
+      border: 1px solid #e2e8f0; max-width: 360px; width: 90%;
+      box-sizing: border-box;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 1; position: relative;
+    }
+    .message-text {
+      font-size: 1.3rem; font-weight: 600;
+      margin-bottom: 1.5rem; line-height: 1.4;
+    }
+
+    /* --- 애플 스타일 스피너 --- */
+    .spinner {
+      position: relative;
+      width: 40px; height: 40px;
+    }
+    .spinner div {
+      box-sizing: border-box;
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
+      border: 4px solid transparent;
+      border-top-color: #1d345c;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    /* 여러 개의 레이어를 겹쳐서 부드러운 원형 지속 회전 효과 */
+    .spinner div:nth-child(1) { animation-duration: 1s; }
+    .spinner div:nth-child(2) { transform: scale(0.8); animation-duration: 1.2s; }
+    .spinner div:nth-child(3) { transform: scale(0.6); animation-duration: 1.4s; }
+
+    @keyframes spin {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* --- 배경 기호 컨테이너 --- */
+    .shapes {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
     }
     .shape {
       position: absolute;
-      opacity: 0.7;
-      animation: float 10s ease-in-out infinite;
+      opacity: 0.75;
+      animation: drift infinite ease-in-out;
     }
-    .shape.circle {
-      width: 80px;
-      height: 80px;
-      background: #e53e3e;
-      border-radius: 50%;
-      top: 10%;
-      left: 15%;
+
+    /* 기호별 기본 크기/색상/위치 */
+    .shape.circle     { width: 60px; height: 60px; background: #e63946; border-radius: 50%; top: 10%; left: 15%; animation-duration: 14s; }
+    .shape.square     { width: 80px; height: 80px; background: #457b9d; top: 60%; left: 75%; transform: rotate(45deg); animation-duration: 17s; }
+    .shape.triangle   { width: 0; height: 0; border-left: 40px solid transparent; border-right: 40px solid transparent; border-bottom: 70px solid #f4a261; top: 70%; left: 20%; animation-duration: 19s; }
+    .shape.ellipse    { width: 100px; height: 50px; background: #e9c46a; border-radius: 50%; top: 20%; left: 70%; transform: rotate(-30deg); animation-duration: 16s; }
+    .shape.pentagon   { width: 0; height: 0; border-style: solid; border-width: 0 35px 50px 35px; border-color: transparent transparent #2a9d8f transparent; top: 35%; left: 40%; animation-duration: 18s; }
+    .shape.hexagon    { width: 80px; height: 46px; background: #8ac926; clip-path: polygon(25% 0%,75% 0%,100% 50%,75%100%,25%100%,0%50%); top: 50%; left: 25%; animation-duration: 20s; }
+
+    /* 부드러운 우주 떠다니기 모션 */
+    @keyframes drift {
+      0%   { transform: translate(0,0) rotate(0deg); }
+      25%  { transform: translate(10px,-15px) rotate(5deg); }
+      50%  { transform: translate(0,-25px) rotate(10deg); }
+      75%  { transform: translate(-10px,-15px) rotate(5deg); }
+      100% { transform: translate(0,0) rotate(0deg); }
     }
-    .shape.square {
-      width: 100px;
-      height: 100px;
-      background: #3182ce;
-      top: 60%;
-      left: 75%;
-      transform: rotate(45deg);
-    }
-    .shape.triangle {
-      width: 0;
-      height: 0;
-      border-left: 60px solid transparent;
-      border-right: 60px solid transparent;
-      border-bottom: 100px solid #d69e2e;
-      top: 70%;
-      left: 20%;
-    }
-    .shape.ellipse {
-      width: 120px;
-      height: 60px;
-      background: #feb2b2;
-      border-radius: 50%;
-      top: 20%;
-      left: 70%;
-      transform: rotate(-30deg);
-    }
-    .container {
-      background: #ffffff;
-      padding: 2rem;
-      border: 1px solid #e2e8f0;
-      max-width: 360px;
-      width: 90%;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-    }
-    .message-text {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #2d3748;
-      margin-bottom: 1.5rem;
-      line-height: 1.4;
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #e2e8f0;
-      border-top: 4px solid #3182ce;
-      border-radius: 50%;
-      animation: spin 1.5s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes float {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(10deg); }
-      100% { transform: translateY(0) rotate(0deg); }
-    }
+
+    /* --- 모바일 대응 --- */
     @media (max-width: 480px) {
-      .container {
-        padding: 1.5rem;
-      }
-      .message-text {
-        font-size: 1.1rem;
-      }
-      .spinner {
-        width: 32px;
-        height: 32px;
-      }
-      .shape {
-        transform: scale(0.7);
-      }
+      .container { padding: 1.5rem; }
+      .message-text { font-size: 1.1rem; }
+      .spinner { width: 32px; height: 32px; }
+      .spinner div { border-width: 3px; }
+      .shape { opacity: 0.6; animation-duration: calc(var(--duration) * 0.7); }
     }
   </style>
 </head>
 <body>
+  <!-- 배경 기호들: 원·네모·세모·타원·오각형·육각형 -->
   <div class="shapes">
     <div class="shape circle"></div>
     <div class="shape square"></div>
     <div class="shape triangle"></div>
     <div class="shape ellipse"></div>
+    <div class="shape pentagon"></div>
+    <div class="shape hexagon"></div>
   </div>
+
+  <!-- 메시지 + 스피너 -->
   <div class="container">
-    <div class="message-text">
-      잠시만 기다려 주세요.
+    <div class="message-text">잠시만 기다려 주세요.</div>
+    <div class="spinner">
+      <div></div><div></div><div></div>
     </div>
-    <div class="spinner"></div>
   </div>
 </body>
 </html>
